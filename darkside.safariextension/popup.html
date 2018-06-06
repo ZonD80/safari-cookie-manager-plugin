@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery-3.3.1.min.js"></script>
+
+</head>
+<body>
+<p>Please note that functionality is limited to JavaScript cookies, because Safari does not have APIs to get all cookies :/<br/>
+As it is only for <strong>testing purposes</strong>, cookies will be set +1 year and to .domain.tld</p>
+<form id="cookies_form">
+<div id="cookies"></div>
+<div><button id="new_field">New cookie</button> <input type="submit" value="Submit changes"/></div>
+</form>
+</body>
+<script>
+
+    var getCookies = function(cookie_string){
+        var pairs = cookie_string.split(";");
+        var cookies = {};
+        for (var i=0; i<pairs.length; i++){
+            var pair = pairs[i].split("=");
+            cookies[(pair[0]+'').trim()] = unescape(pair[1]);
+        }
+        return cookies;
+    }
+
+    function build_editor_forms(cooke_st){
+        $('#cookies').empty();
+        var cookies = getCookies(cooke_st);
+
+        for (var cookie_name in cookies) {
+            var field = $('<div>Name: <input class="name" name="name"/> Value: <input class="value" name="value"/> <a href="#" onclick="$(this).parent().remove(); return false;">Delete</a></div>');
+            field.find('.name').val(cookie_name);
+            field.find('.value').val(cookies[cookie_name]);
+            $('#cookies').append(field);
+        }
+    }
+
+    $('#cookies_form').on('submit',function () {
+        var form_data = $(this).serializeArray();
+
+        safari.extension.globalPage.contentWindow.set_cookies(form_data);
+        return false;
+    });
+
+    $('#new_field').on('click',function(){
+        var field = $('<div>Name: <input class="name" name="name"/> Value: <input class="value" name="value"/> <a href="#" onclick="$(this).parent().remove(); return false;">Delete</a></div>');
+        $('#cookies').append(field);
+        return false;
+    });
+</script>
+</html>

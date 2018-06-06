@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+<script type="text/javascript" charset="utf-8">
+
+    /*for (var i in safari.application.browserWindows) {
+        for (var i2 in safari.application.browserWindows[i].tabs) {
+            safari.application.browserWindows[i].tabs[i2].addEventListener("message", waitForMessage, false);
+        }*/
+
+    safari.application.addEventListener("open", openHandler, true);
+
+    function openHandler(event) {
+
+        event.target.addEventListener("message", waitForMessage, false);
+    }
+        safari.application.activeBrowserWindow.activeTab.addEventListener("message", waitForMessage, false);
+    //}
+
+    safari.application.addEventListener('popover', function(event) {
+
+        get_cookies();
+    }, true);
+
+    function waitForMessage(msgEvent) {
+
+
+        //body = safari.extension.popovers[0].contentWindow.document.querySelector('body');
+        //
+        if (msgEvent.name==='send_cookies_to_editor') {
+            //alert('got set cookies');
+            safari.extension.popovers[0].contentWindow.build_editor_forms(msgEvent.message);
+           // body.innerHTML = 'test';
+            //safari.extension.popovers[0].contentWindow.document.querySelector('body').innerHTML='YAY!';
+        }
+
+       //alert(msgEvent.name+ "\n"+msgEvent.message);
+
+    }
+
+    function get_cookies() {
+        safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("get_cookies");
+    }
+
+    function set_cookies(cookie_array) {
+
+        safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("set_cookies",cookie_array);
+    }
+
+
+</script>
+</body>
+</html>
