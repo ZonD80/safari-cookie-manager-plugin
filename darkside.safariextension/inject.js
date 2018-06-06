@@ -185,7 +185,9 @@ function handleMessage(msgEvent) {
         var cookies = Cookies.get();
 
         for (var name in cookies) { // removing missing cookies
+           // console.log('checking',name,typeof(to_cookie[name]));
             if (typeof(to_cookie[name])!=='string') {
+             //   console.log('removing',name);
                 Cookies.remove(name);
             }
         }
@@ -193,7 +195,7 @@ function handleMessage(msgEvent) {
         for (var name in to_cookie) {
             if (Cookies.get(name)!==to_cookie[name]) {
                 Cookies.remove(name);
-                Cookies.set(name, to_cookie[name], {expires: 365, domain: '.' + window.location.hostname});
+                Cookies.set(name, to_cookie[name], {expires: 365});
             }
         }
 
